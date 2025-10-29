@@ -1,0 +1,7 @@
+/* Import Tailwind base, components, and utilities */
+@import "tailwindcss";
+
+/* Hide React Flow watermark */
+.react-flow__attribution {
+  display: none;
+}
