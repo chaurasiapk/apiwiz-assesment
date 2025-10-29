@@ -1,26 +1,30 @@
-import { createContext, useMemo } from "react";
+import { createContext, useMemo, type CSSProperties, type Dispatch, type SetStateAction } from "react";
 import {
   type Node,
   type Edge,
   MarkerType,
   useNodesState,
   useEdgesState,
+  type NodeChange,
+  type EdgeChange,
 } from "reactflow";
 import { useJson } from "../hooks/useJson";
+
+interface ITreeContextType {
+  nodes: Node[];
+  edges: Edge[];
+  setNodes: Dispatch<SetStateAction<Node[]>>
+  setEdges: Dispatch<SetStateAction<Edge[]>>
+  onNodesChange: (nodes: NodeChange[]) => void;
+  onEdgesChange: (edges: EdgeChange[]) => void;
+}
 
 // --------------------------------------------------
 // Context: TreeContext
 // Provides access to node/edge data and handlers
 // used for rendering and managing the JSON tree.
 // --------------------------------------------------
-export const TreeContext = createContext<{
-  nodes: Node[];
-  edges: Edge[];
-  setNodes: (nodes: Node[]) => void;
-  setEdges: (edges: Edge[]) => void;
-  onNodesChange: (nodes: Node[]) => void;
-  onEdgesChange: (edges: Edge[]) => void;
-}>({
+export const TreeContext = createContext<ITreeContextType>({
   nodes: [],
   edges: [],
   setNodes: () => {},
@@ -33,12 +37,12 @@ export const TreeContext = createContext<{
 // Interface: TreeNode
 // Represents each node in the visualized tree.
 // --------------------------------------------------
-interface TreeNode {
+export interface TreeNode {
   id: string;
   type: "default";
   position: { x: number; y: number };
   data: { label: string; path: string };
-  style?: Record<string, any>;
+  style?: CSSProperties;
 }
 
 // --------------------------------------------------
@@ -54,7 +58,7 @@ const VERTICAL_SPACING = 120;
 // Utility: getNodeColor
 // Returns a color based on the value type
 // --------------------------------------------------
-const getNodeColor = (value: any): string => {
+const getNodeColor = (value: unknown): string => {
   if (typeof value === "string") return "#FCD34D"; // yellow
   if (typeof value === "number") return "#86EFAC"; // green
   if (typeof value === "boolean") return "#F9A8D4"; // pink
@@ -121,7 +125,7 @@ export const TreeProvider = ({ children }: { children: React.ReactNode }) => {
     // Builds nodes and edges for each key/value pair
     // ---------------------------------------
     const traverse = (
-      obj: any,
+      obj: unknown,
       key: string,
       parentId: string | null,
       depth: number,
@@ -233,5 +237,9 @@ export const TreeProvider = ({ children }: { children: React.ReactNode }) => {
     onEdgesChange,
   };
 
-  return <TreeContext.Provider value={value}>{children}</TreeContext.Provider>;
+  return (
+    <TreeContext.Provider value={value as ITreeContextType}>
+      {children}
+    </TreeContext.Provider>
+  );
 };

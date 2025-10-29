@@ -5,6 +5,7 @@ import { useThyme } from "../hooks/useThyme";
 import { useTree } from "../hooks/useTree";
 import { normalizePath } from "../utils/common";
 import { useIsSmallDevice } from "../hooks/useRecursiveMenu";
+import { type Node } from "reactflow";
 
 // -----------------------------------------------------------
 // Component: SearchInput
@@ -30,12 +31,12 @@ export const SearchInput = () => {
   // -----------------------------------------------------------
   const handleReset = useCallback(() => {
     setSearch("");
-    setNodes((nds) =>
-      nds.map((node) => ({
+    setNodes((prevNodes: Node[])=>{
+      return prevNodes.map((node) => ({
         ...node,
         style: { ...node.style, opacity: 1 },
       }))
-    );
+    });
   }, [setNodes]);
 
   // -----------------------------------------------------------
@@ -64,8 +65,8 @@ export const SearchInput = () => {
     let isFound = false;
 
     // Highlight matching nodes
-    setNodes((prevNodes) =>
-      prevNodes.map((node) => {
+    setNodes((prevNodes: Node[]) =>
+      prevNodes.map((node: Node) => {
         const match =
           node?.data?.path === normalizedSearch ||
           node?.data?.path.includes(normalizedSearch);
@@ -118,11 +119,7 @@ export const SearchInput = () => {
         onClick={handleSearch}
         className="px-4 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md hover:shadow-lg active:scale-[0.98]"
       >
-        {isSmallDevice ? (
-          <Search className="w-6 h-6 text-white" />
-        ) : (
-          "Search"
-        )}
+        {isSmallDevice ? <Search className="w-6 h-6 text-white" /> : "Search"}
       </button>
 
       {/* Reset button */}

@@ -40,10 +40,10 @@ export const TreeVisualizer = () => {
         fitView
         // Handlers: propagate node/edge updates
         onNodesChange={(changes: NodeChange[]) =>
-          onNodesChange(changes as any)
+          onNodesChange(changes as NodeChange[])
         }
         onEdgesChange={(changes: EdgeChange[]) =>
-          onEdgesChange(changes as any)
+          onEdgesChange(changes as EdgeChange[])
         }
       >
         {/* Background grid — adapts to theme */}

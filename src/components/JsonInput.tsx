@@ -79,7 +79,6 @@ export const JsonInput: FC<IJsonInput> = ({ isMenuOpen, handleMenuOpen }) => {
           }`}
         value={json}
         onChange={handleInputChange}
-        placeholder="Paste or write your JSON here..."
       />
 
       {/* ------------------------ Generate Button --------------------------- */}
